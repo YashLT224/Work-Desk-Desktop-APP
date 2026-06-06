@@ -1,0 +1,49 @@
+WorkDesk — desktop app (Electron)
+=================================
+
+Your data lives in a real file: db.json — read & written directly by the app,
+no server, no permission popups.
+
+ONE-TIME SETUP
+--------------
+1. Install Node.js (if not already): https://nodejs.org  (LTS).
+   Check in Terminal:  node --version
+
+2. Open Terminal in this folder and run once:
+
+       npm install
+
+   (downloads Electron — may take a minute.)
+
+RUN THE APP (dev)
+-----------------
+       npm start
+
+   The WorkDesk window opens. Everything you do is saved automatically to
+   db.json in this folder. Close the window to quit.
+
+MAKE A REAL DOUBLE-CLICK APP (optional)
+---------------------------------------
+To get a true installable app (WorkDesk.app on Mac / WorkDesk Setup .exe on Windows)
+that you can launch from the Dock/Start menu with no Terminal:
+
+       npm run dist          (builds for your current OS)
+       npm run dist:mac      (Mac .dmg)
+       npm run dist:win      (Windows installer)
+
+   The finished app appears in the new  dist/  folder. Install/move it anywhere.
+   (Note: in the packaged app, db.json moves to your OS user-data folder so it's
+   always writable. The app shows nothing extra — it just works.)
+
+FILES IN THIS FOLDER
+--------------------
+   WorkDesk.html  — the app UI (also opens standalone in a browser, using
+                    in-browser storage, if you ever want a no-install quick look)
+   main.js        — Electron main process (reads/writes db.json)
+   preload.js     — safe bridge between app and file system
+   package.json   — dependencies + build config
+   server.js      — optional: "node server.js" runs a browser version on
+                    http://localhost:4321 (also reads/writes db.json)
+   db.json        — YOUR DATA (created on first run). Back this up.
+
+Tip: keep a copy of db.json somewhere safe, or use the in-app Export button.
