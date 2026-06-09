@@ -165,8 +165,8 @@
   .tag-row { display:flex; gap:5px; flex-wrap:wrap; }
   .tag { font-size:10px; font-weight:600; padding:2px 9px; border-radius:8px; background:var(--accent-soft); color:var(--accent); white-space:nowrap; cursor:pointer; }
   .task-date { font-size:10px; font-weight:600; padding:2px 8px; border-radius:8px; background:var(--glass); border:1px solid var(--glass-border); color:var(--text-faint); white-space:nowrap; }
-  .seg { display:inline-flex; background:var(--glass-strong); border:1px solid var(--glass-border); border-radius:13px; padding:4px; gap:4px; margin-bottom:14px; }
-  .seg-btn { border:none; background:transparent; color:var(--text-soft); font-size:13px; font-weight:600; padding:8px 18px; border-radius:10px; cursor:pointer; transition:.15s; }
+  .seg { display:inline-flex; background:var(--glass-strong); border:1px solid var(--glass-border); border-radius:13px; padding:4px; gap:4px; margin-bottom:14px; flex-shrink:0; }
+  .seg-btn { border:none; background:transparent; color:var(--text-soft); font-size:13px; font-weight:600; padding:8px 18px; border-radius:10px; cursor:pointer; transition:.15s; white-space:nowrap; flex-shrink:0; width:auto; }
   .seg-btn:hover { color:var(--text); }
   .seg-btn.on { background:var(--accent); color:#fff; }
   .filter-bar { display:flex; gap:7px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
@@ -241,11 +241,11 @@
   .empty { text-align:center; color:var(--text-faint); padding:50px 20px; font-size:14px; }
   .empty .big { font-size:42px; margin-bottom:12px; opacity:0.5; }
   /* calendar */
-  .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px; }
   .cal-head .month { font-size:18px; font-weight:700; }
   .cal-nav { display:flex; gap:8px; align-items:center; }
-  .cal-nav button { width:34px;height:34px;border-radius:11px;border:1px solid var(--glass-border);background:var(--glass-strong);color:var(--text);cursor:pointer;font-size:16px;transition:.15s; }
-  .cal-nav button:hover { background:var(--accent-soft); }
+  .cal-nav > button { width:34px;height:34px;border-radius:11px;border:1px solid var(--glass-border);background:var(--glass-strong);color:var(--text);cursor:pointer;font-size:16px;transition:.15s; }
+  .cal-nav > button:hover { background:var(--accent-soft); }
   .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
   .cal-dow { text-align:center; font-size:11px; font-weight:600; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.5px; padding-bottom:4px; }
   .cal-cell {
@@ -267,6 +267,39 @@
   .cell-more { font-size:10px; color:var(--text-faint); padding:1px 4px; }
   .cal-grid.week .cal-cell { min-height:230px; }
   .day-view { max-width:640px; }
+  .cell-rt { display:flex; align-items:center; gap:6px; }
+  .cell-prog { font-size:10px; color:var(--text-faint); font-weight:600; }
+  .cell-chip.plan.done { text-decoration:line-through; opacity:0.5; }
+  /* planner tile insights */
+  .cell-insights { margin-top:8px; display:flex; flex-direction:column; gap:7px; }
+  .ins-bar { height:6px; border-radius:4px; background:var(--glass-border); overflow:hidden; }
+  .ins-fill { height:100%; background:var(--ok); border-radius:4px; transition:width .2s; }
+  .ins-pills { display:flex; gap:5px; flex-wrap:wrap; }
+  .ins-pill { font-size:11px; font-weight:600; padding:3px 9px; border-radius:8px; background:var(--accent-soft); color:var(--accent); }
+  .ins-pill.done { background:var(--ok-bg); color:var(--ok); }
+  .ins-pill.bullet { background:var(--glass); color:var(--text-soft); }
+  .ins-pill.note { background:var(--glass); color:var(--text-soft); }
+  .plan-cell:hover { border-color:var(--accent); }
+  /* planner day page */
+  .day-page { max-width:680px; }
+  .back-btn { border:none; background:transparent; color:var(--text-soft); font-size:13px; font-weight:600; cursor:pointer; padding:6px 0; margin-bottom:6px; }
+  .back-btn:hover { color:var(--accent); }
+  .day-page-head { margin-bottom:16px; }
+  .dp-date { font-size:20px; font-weight:700; }
+  .dp-sub { font-size:13px; color:var(--text-faint); margin-top:3px; }
+  .blk { display:flex; align-items:flex-start; gap:11px; padding:9px 13px; background:var(--glass-strong); border:1px solid var(--glass-border); border-radius:12px; margin-bottom:7px; transition:.12s; }
+  .blk:hover { border-color:var(--accent); }
+  .blk-in { flex:1; border:none; background:transparent; font-size:14px; color:var(--text); padding:3px 0; border-radius:0; min-width:0; }
+  .blk-in:focus { box-shadow:none; outline:none; }
+  .blk-ta { resize:none; line-height:1.6; min-height:24px; overflow:hidden; font-family:inherit; }
+  .blk-dot { color:var(--accent); font-size:20px; line-height:1; flex-shrink:0; margin-top:1px; }
+  .plan-check { width:21px; height:21px; border-radius:7px; border:2px solid var(--text-faint); cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; transition:.12s; margin-top:1px; }
+  .blk.done .plan-check { background:var(--ok); border-color:var(--ok); }
+  .blk.done .blk-in { text-decoration:line-through; color:var(--text-faint); }
+  .blk-text { background:var(--background, transparent); }
+  .plan-trash { cursor:pointer; color:var(--text-faint); opacity:0; font-size:15px; flex-shrink:0; margin-top:2px; }
+  .blk:hover .plan-trash { opacity:0.6; }
+  .plan-trash:hover { color:var(--danger); opacity:1; }
   /* scrollbar */
   ::-webkit-scrollbar { width:8px; }
   ::-webkit-scrollbar-thumb { background:var(--glass-border); border-radius:8px; }
@@ -328,6 +361,7 @@
   .tm-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .tm-field { display:flex; flex-direction:column; gap:5px; font-size:12px; color:var(--text-faint); font-weight:600; }
   .tm-field input, .tm-field select { font-size:14px; color:var(--text); font-weight:400; }
+  .tm-desc { width:100%; min-height:84px; resize:vertical; font-size:14px; color:var(--text); font-weight:400; line-height:1.6; }
   .tm-sub { margin-top:16px; border-top:1px solid var(--line); padding-top:14px; }
   .tm-sub-head { font-size:13px; font-weight:600; color:var(--text-soft); margin-bottom:8px; }
   .tm-subcount { color:var(--text-faint); font-weight:400; margin-left:4px; }
@@ -358,6 +392,8 @@
     <div class="nav-item" data-view="notes"><span class="ic">📝</span> Notes <span class="count" id="noteCount">0</span></div>
     <div class="nav-item" data-view="calendar"><span class="ic">📅</span> Calendar</div>
     <div class="nav-item" data-view="thoughts"><span class="ic">💡</span> Daily Thoughts</div>
+    <div class="group-label">Planner</div>
+    <div class="nav-item" data-view="planner"><span class="ic">📋</span> Day Planner</div>
     <div class="sidebar-foot">
       <button class="icon-btn" id="exportBtn">⬇ Export</button>
       <button class="icon-btn" id="importBtn">⬆ Import</button>
@@ -408,6 +444,21 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="planModal" style="display:none">
+  <div class="modal glass" style="width:min(540px,94vw)">
+    <div class="modal-head">
+      <span class="m-title" id="planModalTitle" style="font-size:19px;font-weight:600"></span>
+      <span class="m-close" id="planClose" title="Close (Esc)">✕</span>
+    </div>
+    <div class="add-row" style="margin-bottom:14px">
+      <select id="planModalType" style="width:118px"><option value="check">☑ To-do</option><option value="bullet">• Bullet</option><option value="text">Text</option></select>
+      <input id="planModalInput" placeholder="Add a line...">
+      <button class="btn-primary" id="planModalAdd">＋ Add</button>
+    </div>
+    <div id="planModalList" style="overflow-y:auto;max-height:46vh"></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="entryModal" style="display:none">
   <div class="modal glass" style="width:min(520px,94vw)">
     <div class="modal-head">
@@ -440,6 +491,8 @@
     </div>
     <label class="tm-field" style="margin-top:12px"><span>Tags (comma separated)</span>
       <input id="tmTags" placeholder="bug, backend"></label>
+    <label class="tm-field" style="margin-top:12px"><span>Description</span>
+      <textarea id="tmDesc" class="tm-desc" placeholder="Add details, context, links..."></textarea></label>
     <div class="tm-sub">
       <div class="tm-sub-head"><span>Subtasks <span id="tmSubCount" class="tm-subcount"></span></span></div>
       <div id="tmSubList"></div>
@@ -516,6 +569,12 @@ const DEFAULT = {
   ],
   thoughts:[
     {id:'th1',text:'Aaj system design padhna hai — caching patterns.',date:todayKey(),ts:Date.now()}
+  ],
+  planner:[
+    {id:'p0',text:'Focus for today',type:'text',date:todayKey(),done:false,ts:Date.now()},
+    {id:'p1',text:'Plan the day',type:'check',date:todayKey(),done:false,ts:Date.now()+1},
+    {id:'p2',text:'Reply to emails',type:'check',date:todayKey(),done:true,ts:Date.now()+2},
+    {id:'p3',text:'Read 10 pages',type:'bullet',date:todayKey(),done:false,ts:Date.now()+3}
   ]
 };
 
@@ -523,6 +582,8 @@ let state = load();
 let current = {view:'home', folderId: state.folders[0]?.id || null};
 let calCursor = new Date();                          // reference date for calendar
 let calView = 'month';                               // month | week | day
+let planCursor = new Date();                         // planner calendar reference date
+let planView = 'month';                              // planner: month | week | day
 let selDate = todayKey();                            // selected day in calendar
 let tagFilter = null;                                // active tag filter in folder view
 let dragId = null;                                   // task being dragged
@@ -534,7 +595,7 @@ let prioFilter = 'all';                              // all | high | med | low
 
 const ELECTRON = typeof window!=='undefined' && !!window.workdesk;   // native desktop app
 const SERVER = !ELECTRON && location.protocol.startsWith('http');    // local server
-function migrate(s){ if(s&&s.folders){ s.folders.forEach(f=>(f.tasks||[]).forEach(t=>{ if(!t.created) t.created=Date.now(); })); } return s; }
+function migrate(s){ if(s&&s.folders){ s.folders.forEach(f=>(f.tasks||[]).forEach(t=>{ if(!t.created) t.created=Date.now(); })); if(!s.planner) s.planner=[]; s.planner.forEach(p=>{ if(!p.type) p.type='check'; }); } return s; }
 function load(){
   try { const s = JSON.parse(localStorage.getItem('workdesk'));
     if(s && s.folders){ return migrate(s); }
@@ -651,6 +712,7 @@ function render(){
   else if(current.view==='notes') renderNotes();
   else if(current.view==='calendar') renderCalendar();
   else if(current.view==='thoughts') renderThoughts();
+  else if(current.view==='planner') renderPlanner();
 }
 
 /* HOME / DASHBOARD */
@@ -799,7 +861,8 @@ function renderFolder(){
     if(t.due){ const od=isOverdue(t); dueChip=`<span class="task-date ${od?'overdue':''}" title="Due ${t.due}">⏰ ${shortDate(t.due+'T00:00:00')}</span>`; }
     const repChip=(t.repeat&&t.repeat!=='none')?`<span class="task-date" title="Repeats ${t.repeat}">🔁 ${t.repeat}</span>`:'';
     const subs=t.subtasks||[]; const subChip=subs.length?`<span class="task-date" title="Subtasks">☑ ${subs.filter(s=>s.done).length}/${subs.length}</span>`:'';
-    const meta=(tags||dateChip||dueChip||repChip||subChip)?`<div class="tag-row">${dueChip}${repChip}${subChip}${dateChip}${tags}</div>`:'';
+    const descChip=(t.description&&t.description.trim())?`<span class="task-date" title="Has description">📝</span>`:'';
+    const meta=(tags||dateChip||dueChip||repChip||subChip||descChip)?`<div class="tag-row">${dueChip}${repChip}${subChip}${descChip}${dateChip}${tags}</div>`:'';
     h+=`<div class="task ${t.done?'done':''}" data-id="${t.id}" draggable="true">
       <span class="grip" title="Drag to reorder">⠿</span>
       <div class="check">${t.done?'✓':''}</div>
@@ -876,6 +939,7 @@ function openTaskEdit(fid,tid){
   $('#tmDue').value=t.due||'';
   $('#tmRepeat').value=t.repeat||'none';
   $('#tmTags').value=(t.tags||[]).join(', ');
+  $('#tmDesc').value=t.description||'';
   $('#tmFolder').innerHTML=state.folders.map(fo=>`<option value="${fo.id}" ${fo.id===fid?'selected':''}>${esc(fo.name)}</option>`).join('');
   $('#tmMeta').textContent=t.created?('Created '+new Date(t.created).toLocaleDateString()):'';
   renderSubList();
@@ -908,6 +972,7 @@ function closeTaskModal(){
     t.due=$('#tmDue').value||'';
     t.repeat=$('#tmRepeat').value;
     t.tags=$('#tmTags').value.split(',').map(s=>s.trim().replace(/^#/,'')).filter(Boolean);
+    t.description=$('#tmDesc').value.trim();
     const newFid=$('#tmFolder').value;
     if(newFid!==ref.fid){ const nf=state.folders.find(x=>x.id===newFid); if(nf){ f.tasks=f.tasks.filter(x=>x.id!==t.id); nf.tasks.unshift(t); } }
     save();
@@ -937,7 +1002,7 @@ function addTask(){
   const f=state.folders.find(x=>x.id===current.folderId); if(!f) return;
   const inp=$('#taskInput'); const text=inp.value.trim(); if(!text) return;
   const tags=($('#tagsInput').value||'').split(',').map(s=>s.trim().replace(/^#/,'')).filter(Boolean);
-  f.tasks.unshift({id:uid(),text,priority:$('#prioInput').value,done:false,tags,created:Date.now(),due:'',repeat:'none',subtasks:[]});
+  f.tasks.unshift({id:uid(),text,priority:$('#prioInput').value,done:false,tags,created:Date.now(),due:'',repeat:'none',subtasks:[],description:''});
   save(); render(); $('#taskInput').focus();
 }
 
@@ -1140,6 +1205,127 @@ function closeEntryModal(){
   if(current.view==='calendar'||current.view==='thoughts') render();
 }
 
+/* ===== DAY PLANNER (isolated to-do calendar) ===== */
+function planEntriesFor(key){ return state.planner.filter(p=>p.date===key).sort((a,b)=>a.ts-b.ts); }
+function planCellHTML(dateObj){
+  const key=dateObj.toLocaleDateString('en-CA');
+  const items=planEntriesFor(key);
+  const cls=['cal-cell','plan-cell']; if(key===todayKey())cls.push('today');
+  const checks=items.filter(i=>i.type==='check'); const dn=checks.filter(i=>i.done).length;
+  const bul=items.filter(i=>i.type==='bullet').length;
+  const txt=items.filter(i=>i.type==='text').length;
+  let ins='';
+  if(items.length){
+    let bar='';
+    if(checks.length){ const pct=Math.round(dn/checks.length*100); bar=`<div class="ins-bar"><div class="ins-fill" style="width:${pct}%"></div></div>`; }
+    const pills=[];
+    if(checks.length) pills.push(`<span class="ins-pill ${dn===checks.length?'done':''}">☑ ${dn}/${checks.length}</span>`);
+    if(bul) pills.push(`<span class="ins-pill bullet">• ${bul}</span>`);
+    if(txt) pills.push(`<span class="ins-pill note">▤ ${txt}</span>`);
+    ins=`<div class="cell-insights">${bar}<div class="ins-pills">${pills.join('')}</div></div>`;
+  }
+  return `<div class="${cls.join(' ')}" data-key="${key}">
+    <div class="cell-top"><span class="dnum">${dateObj.getDate()}</span><span class="cell-add" title="Open day">＋</span></div>
+    ${ins}</div>`;
+}
+function renderPlanner(){
+  $('#viewIcon').textContent='📋'; $('#viewTitle').textContent='Day Planner';
+  $('#viewSub').textContent='Roz ke apne to-do tasks log karo — project tasks se bilkul alag';
+  let label='';
+  if(planView==='month'){ label=`${MONTHS[planCursor.getMonth()]} ${planCursor.getFullYear()}`; }
+  else if(planView==='week'){ const s=new Date(planCursor); s.setDate(s.getDate()-s.getDay()); const e=new Date(s); e.setDate(s.getDate()+6);
+    label=`${s.getDate()} ${MONTHS[s.getMonth()].slice(0,3)} – ${e.getDate()} ${MONTHS[e.getMonth()].slice(0,3)}`; }
+  else { label=planCursor.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'}); }
+  let h=`<div class="cal-head">
+    <span class="month">${label}</span>
+    <div class="cal-nav">
+      <div class="seg" style="margin:0 8px 0 0">
+        <button class="seg-btn ${planView==='month'?'on':''}" data-pv="month">Month</button>
+        <button class="seg-btn ${planView==='week'?'on':''}" data-pv="week">Week</button>
+        <button class="seg-btn ${planView==='day'?'on':''}" data-pv="day">Day</button>
+      </div>
+      <button id="planPrev" title="Previous">‹</button>
+      <button id="planToday" style="width:auto;padding:0 14px;font-size:13px;font-weight:600">Today</button>
+      <button id="planNext" title="Next">›</button>
+    </div></div>`;
+  if(planView==='month'){
+    const y=planCursor.getFullYear(), m=planCursor.getMonth();
+    const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate();
+    h+='<div class="cal-grid">';
+    DOW.forEach(d=>h+=`<div class="cal-dow">${d}</div>`);
+    for(let i=0;i<first;i++) h+=`<div class="cal-cell empty-cell"></div>`;
+    for(let d=1;d<=days;d++) h+=planCellHTML(new Date(y,m,d));
+    h+='</div>';
+  } else if(planView==='week'){
+    const s=new Date(planCursor); s.setDate(s.getDate()-s.getDay());
+    h+='<div class="cal-grid week">';
+    DOW.forEach(d=>h+=`<div class="cal-dow">${d}</div>`);
+    for(let i=0;i<7;i++){ const dd=new Date(s); dd.setDate(s.getDate()+i); h+=planCellHTML(dd); }
+    h+='</div>';
+  } else {
+    const key=planCursor.toLocaleDateString('en-CA');
+    const dn=planEntriesFor(key).filter(i=>i.type==='check'); const done=dn.filter(i=>i.done).length;
+    h+=`<div class="day-page">
+      <button class="back-btn" id="planBack">‹ Back to month</button>
+      <div class="day-page-head">
+        <div><div class="dp-date">${planCursor.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}${key===todayKey()?' · Today':''}</div>
+        <div class="dp-sub">${dn.length?`${done} of ${dn.length} to-dos done`:'No to-dos yet'}</div></div>
+      </div>
+      <div class="add-row">
+        <select id="planDayType" style="width:118px"><option value="check">☑ To-do</option><option value="bullet">• Bullet</option><option value="text">Text</option></select>
+        <input id="planDayInput" placeholder="Add a line...">
+        <button class="btn-primary" id="planDayAdd">＋ Add</button></div>
+      <div id="planDayList"></div></div>`;
+  }
+  $('#content').innerHTML=h;
+  $('#content').querySelectorAll('.seg-btn[data-pv]').forEach(el=>{ el.onclick=()=>{ planView=el.dataset.pv; render(); }; });
+  const step=(n)=>{ if(planView==='month') planCursor.setMonth(planCursor.getMonth()+n); else if(planView==='week') planCursor.setDate(planCursor.getDate()+7*n); else planCursor.setDate(planCursor.getDate()+n); render(); };
+  $('#planPrev').onclick=()=>step(-1);
+  $('#planNext').onclick=()=>step(1);
+  $('#planToday').onclick=()=>{ planCursor=new Date(); render(); };
+  if(planView==='day'){
+    const key=planCursor.toLocaleDateString('en-CA');
+    renderPlanRows($('#planDayList'), key, ()=>render());
+    const inp=$('#planDayInput');
+    const add=()=>{ const v=inp.value.trim(); if(!v)return; state.planner.push({id:uid(),text:v,type:$('#planDayType').value,date:key,done:false,ts:Date.now()}); save(); render(); };
+    $('#planDayAdd').onclick=add; inp.onkeydown=e=>{ if(e.key==='Enter') add(); };
+    $('#planBack').onclick=()=>{ planView='month'; render(); };
+    return;
+  }
+  $('#content').querySelectorAll('.cal-cell[data-key]').forEach(el=>{ el.onclick=()=>{ planCursor=new Date(el.dataset.key+'T00:00:00'); planView='day'; render(); }; });
+}
+function renderPlanRows(container, key, after){
+  const items=planEntriesFor(key);
+  if(items.length===0){ container.innerHTML='<div class="empty" style="padding:22px"><div class="big">📋</div>Is din ke liye kuch nahi. Upar se To-do / Bullet / Text add karo.</div>'; return; }
+  container.innerHTML=items.map(t=>{
+    if(t.type==='text') return `<div class="blk blk-text" data-id="${t.id}"><textarea class="blk-in blk-ta" rows="1" placeholder="Note...">${esc(t.text)}</textarea><span class="plan-trash">🗑</span></div>`;
+    if(t.type==='bullet') return `<div class="blk blk-bullet" data-id="${t.id}"><span class="blk-dot">•</span><input class="blk-in" value="${esc(t.text)}" placeholder="Bullet..."><span class="plan-trash">🗑</span></div>`;
+    return `<div class="blk blk-check ${t.done?'done':''}" data-id="${t.id}"><span class="plan-check">${t.done?'✓':''}</span><input class="blk-in" value="${esc(t.text)}" placeholder="To-do..."><span class="plan-trash">🗑</span></div>`;
+  }).join('');
+  container.querySelectorAll('.blk').forEach(el=>{
+    const id=el.dataset.id; const t=state.planner.find(x=>x.id===id); if(!t) return;
+    const inp=el.querySelector('.blk-in');
+    if(inp){
+      inp.oninput=()=>{ t.text=inp.value; if(inp.tagName==='TEXTAREA'){ inp.style.height='auto'; inp.style.height=inp.scrollHeight+'px'; } save(); };
+      if(inp.tagName==='TEXTAREA') setTimeout(()=>{ inp.style.height='auto'; inp.style.height=inp.scrollHeight+'px'; },0);
+    }
+    const chk=el.querySelector('.plan-check'); if(chk) chk.onclick=()=>{ t.done=!t.done; save(); after(); };
+    el.querySelector('.plan-trash').onclick=()=>{ state.planner=state.planner.filter(x=>x.id!==id); save(); after(); };
+  });
+}
+/* planner day modal */
+let openPlanKey=null;
+function openPlanDay(key){
+  openPlanKey=key;
+  $('#planModalTitle').textContent=fmtDay(key)+(key===todayKey()?' · Today':'');
+  $('#planModalInput').value='';
+  renderPlanModalList();
+  $('#planModal').style.display='flex';
+  setTimeout(()=>$('#planModalInput').focus(),40);
+}
+function renderPlanModalList(){ renderPlanRows($('#planModalList'), openPlanKey, renderPlanModalList); }
+function closePlanModal(){ $('#planModal').style.display='none'; openPlanKey=null; if(current.view==='planner') render(); }
+
 /* THOUGHTS view */
 function renderThoughts(){
   $('#viewIcon').textContent='💡'; $('#viewTitle').textContent='Daily Thoughts';
@@ -1209,6 +1395,11 @@ $('#dayModalInput').onkeydown=e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDe
 $('#dayClose').onclick=closeDayModal;
 $('#dayModal').onclick=e=>{ if(e.target.id==='dayModal') closeDayModal(); };
 
+$('#planModalAdd').onclick=()=>{ const v=$('#planModalInput').value.trim(); if(!v||!openPlanKey) return; state.planner.push({id:uid(),text:v,type:$('#planModalType').value,date:openPlanKey,done:false,ts:Date.now()}); save(); $('#planModalInput').value=''; renderPlanModalList(); };
+$('#planModalInput').onkeydown=e=>{ if(e.key==='Enter') $('#planModalAdd').click(); };
+$('#planClose').onclick=closePlanModal;
+$('#planModal').onclick=e=>{ if(e.target.id==='planModal') closePlanModal(); };
+
 $('#entryModalBody').oninput=()=>{ const t=state.thoughts.find(x=>x.id===openEntryId); if(t){ t.text=$('#entryModalBody').value; save(); } };
 $('#entryClose').onclick=closeEntryModal;
 $('#entryDelete').onclick=()=>{ if(openEntryId && confirm('Delete this entry?')){ state.thoughts=state.thoughts.filter(x=>x.id!==openEntryId); save(); closeEntryModal(); } };
@@ -1230,7 +1421,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName) && !searchOpen){ e.preventDefault(); openSearch(); }
 });
 
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(searchOpen) closeSearch(); else if(openFolderId) closeFolderModal(); else if(openTask) closeTaskModal(); else if(openEntryId) closeEntryModal(); else if(openNoteId) closeNoteModal(); else if(openDayKey) closeDayModal(); } });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(searchOpen) closeSearch(); else if(openFolderId) closeFolderModal(); else if(openTask) closeTaskModal(); else if(openEntryId) closeEntryModal(); else if(openNoteId) closeNoteModal(); else if(openPlanKey) closePlanModal(); else if(openDayKey) closeDayModal(); } });
 
 /* DUE-DATE REMINDERS */
 function checkReminders(){
