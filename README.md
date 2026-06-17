@@ -91,6 +91,16 @@ The finished app lands in `dist/`. Drag it to Applications (macOS) and launch it
 
 > First launch on macOS may show an "unidentified developer" warning (the app isn't code-signed). Right-click → **Open** once to allow it.
 
+### Updating the installed app
+After changing the code, rebuild and reinstall:
+```bash
+npm run dist:mac     # rebuild the macOS app
+```
+Then replace the old **WorkDesk** in Applications with the fresh one from `dist/`.
+Your data is safe — `db.json` lives in the OS user-data folder, so reinstalling never deletes it.
+
+> While developing, you don't need to rebuild for every change — just run `npm start` and press **⌘R** in the window to reload instantly.
+
 ---
 
 ## 💾 Where your data lives
