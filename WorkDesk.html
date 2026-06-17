@@ -202,6 +202,16 @@
   .note-card.pinned .nc-title { padding-left:20px; }
   .nc-tags { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
   .m-tags { width:100%; margin-bottom:10px; font-size:13px; }
+  .m-colors { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+  .m-swatch { width:26px; height:26px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:.12s; display:flex; align-items:center; justify-content:center; }
+  .m-swatch:hover { transform:scale(1.12); }
+  .m-swatch.on { border-color:var(--text); transform:scale(1.12); }
+  .m-swatch.none { background:var(--glass); color:var(--text-faint); font-size:13px; }
+  .cf-swatch { width:22px; height:22px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:.12s; display:inline-flex; align-items:center; justify-content:center; }
+  .cf-swatch:hover { transform:scale(1.1); }
+  .cf-swatch.on { border-color:var(--text); }
+  .cf-swatch.all { width:auto; height:auto; border-radius:9px; padding:4px 12px; background:var(--glass-strong); border:1px solid var(--glass-border); font-size:12px; font-weight:600; color:var(--text-soft); }
+  .cf-swatch.all.on { background:var(--accent); color:#fff; border-color:var(--accent); }
   .m-icon-btn { cursor:pointer; font-size:16px; opacity:0.4; width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:9px; transition:.15s; filter:grayscale(1); }
   .m-icon-btn:hover { background:var(--glass); opacity:0.8; }
   .m-icon-btn.on { opacity:1; filter:none; background:var(--accent-soft); }
@@ -212,10 +222,17 @@
   .m-preview { flex:1; min-height:30vh; overflow-y:auto; font-size:15px; line-height:1.7; }
   .m-preview.md h3,.m-preview.md h4,.m-preview.md h5 { margin:10px 0 6px; }
   .m-preview.md p { margin:0 0 8px; }
-  .m-preview.md ul { margin:0 0 8px 18px; }
-  .m-preview.md li { margin:2px 0; }
+  .m-preview.md ul,.m-preview.md ol { margin:0 0 8px 20px; }
+  .m-preview.md li { margin:3px 0; }
   .m-preview.md code { background:var(--glass); padding:1px 6px; border-radius:5px; font-family:var(--font-mono,monospace); font-size:13px; }
   .m-preview.md a { color:var(--accent); }
+  .m-preview.md del { color:var(--text-faint); }
+  .m-preview.md hr { border:none; border-top:1px solid var(--color-border-secondary,rgba(128,128,128,.3)); margin:14px 0; }
+  .m-preview.md blockquote { border-left:3px solid var(--accent); margin:0 0 8px; padding:2px 0 2px 12px; color:var(--text-soft); }
+  /* markdown toolbar */
+  .md-toolbar { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .md-toolbar button { min-width:32px; height:30px; padding:0 8px; border:1px solid var(--glass-border); background:var(--glass-strong); color:var(--text-soft); border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; transition:.12s; }
+  .md-toolbar button:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
   .note-card .trash { position:absolute; top:10px; right:12px; cursor:pointer; color:var(--text-faint); opacity:0; font-size:15px; z-index:2; }
   .note-card:hover .trash { opacity:0.6; }
   .note-card .trash:hover { color:var(--danger); opacity:1; }
@@ -422,9 +439,19 @@
       <span class="m-icon-btn" id="mPin" title="Pin / unpin">📌</span>
       <span class="m-close" id="mClose" title="Close (Esc)">✕</span>
     </div>
-    <input id="mNoteTags" class="m-tags" placeholder="tags (comma separated)">
+    <div class="m-colors" id="mColors"></div>
     <div class="m-tabs"><button class="m-tab on" id="mEditTab">Edit</button><button class="m-tab" id="mPrevTab">Preview</button><span class="m-hint">Markdown supported</span></div>
-    <textarea id="mNoteBody" class="m-body" placeholder="Write something... (# heading, **bold**, - list, [link](url))"></textarea>
+    <div class="md-toolbar" id="mdToolbar">
+      <button data-md="h" title="Heading">H</button>
+      <button data-md="bold" title="Bold"><b>B</b></button>
+      <button data-md="italic" title="Italic"><i>I</i></button>
+      <button data-md="ul" title="Bullet list">•—</button>
+      <button data-md="ol" title="Numbered list">1.</button>
+      <button data-md="quote" title="Quote">❝</button>
+      <button data-md="code" title="Code">&lt;/&gt;</button>
+      <button data-md="hr" title="Divider">――</button>
+    </div>
+    <textarea id="mNoteBody" class="m-body" placeholder="Write something... use the toolbar above, or type Markdown (# heading, **bold**, - bullet, 1. number, --- divider)"></textarea>
     <div id="mNotePreview" class="m-preview md" style="display:none"></div>
     <div class="modal-foot">
       <span class="m-date" id="mNoteDate"></span>
@@ -535,22 +562,42 @@ const todayKey = () => new Date().toLocaleDateString('en-CA');
 const fmtDay = d => new Date(d+'T00:00:00').toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'short'});
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const shortDate = ts => new Date(ts).toLocaleDateString(undefined,{day:'numeric',month:'short'});
-let notesTag = null;  // active tag filter in notes view
+let notesColor = null;  // active color filter in notes view
+const NOTE_COLORS=['#e8b84b','#e0795b','#d4596f','#9b6cf0','#4f8de0','#3aa98a','#7a8a99'];
+function hexA(hex,a){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
 function mdRender(src){
-  const lines=(src||'').split('\n'); let html='', inList=false;
+  const lines=(src||'').split('\n'); let html='', list=null;
+  const closeList=()=>{ if(list){ html+=`</${list}>`; list=null; } };
   const inline=s=>esc(s)
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank">$1</a>')
     .replace(/`([^`]+)`/g,'<code>$1</code>')
     .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*([^*]+)\*/g,'<em>$1</em>');
+    .replace(/~~([^~]+)~~/g,'<del>$1</del>')
+    .replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>');
   lines.forEach(line=>{ let m;
-    if(m=line.match(/^(#{1,3})\s+(.*)/)){ if(inList){html+='</ul>';inList=false;} const lv=Math.min(m[1].length+2,5); html+=`<h${lv}>${inline(m[2])}</h${lv}>`; }
-    else if(m=line.match(/^[-*]\s+(.*)/)){ if(!inList){html+='<ul>';inList=true;} html+=`<li>${inline(m[1])}</li>`; }
-    else if(line.trim()===''){ if(inList){html+='</ul>';inList=false;} }
-    else { if(inList){html+='</ul>';inList=false;} html+=`<p>${inline(line)}</p>`; }
+    if(/^\s*(---|\*\*\*|___)\s*$/.test(line)){ closeList(); html+='<hr>'; }
+    else if(m=line.match(/^(#{1,3})\s+(.*)/)){ closeList(); const lv=Math.min(m[1].length+2,5); html+=`<h${lv}>${inline(m[2])}</h${lv}>`; }
+    else if(m=line.match(/^\s*[-*]\s+(.*)/)){ if(list!=='ul'){closeList(); html+='<ul>'; list='ul';} html+=`<li>${inline(m[1])}</li>`; }
+    else if(m=line.match(/^\s*\d+[.)]\s+(.*)/)){ if(list!=='ol'){closeList(); html+='<ol>'; list='ol';} html+=`<li>${inline(m[1])}</li>`; }
+    else if(m=line.match(/^>\s?(.*)/)){ closeList(); html+=`<blockquote>${inline(m[1])}</blockquote>`; }
+    else if(line.trim()===''){ closeList(); }
+    else { closeList(); html+=`<p>${inline(line)}</p>`; }
   });
-  if(inList) html+='</ul>';
+  closeList();
   return html||'<p class="nc-empty">Nothing to preview</p>';
+}
+function mdInsert(kind){
+  const ta=$('#mNoteBody'); if(!ta) return; ta.focus();
+  const val=ta.value, s=ta.selectionStart, e=ta.selectionEnd, sel=val.slice(s,e);
+  const setVal=(nv,cs,ce)=>{ ta.value=nv; ta.setSelectionRange(cs,ce==null?cs:ce); };
+  const wrap=(a,b,ph)=>{ const t=sel||ph; setVal(val.slice(0,s)+a+t+b+val.slice(e), s+a.length, s+a.length+t.length); };
+  const ls=val.lastIndexOf('\n',s-1)+1;
+  const prefix=(p)=>setVal(val.slice(0,ls)+p+val.slice(ls), s+p.length, e+p.length);
+  const block=(t)=>{ const pre=(s>0&&val[s-1]!=='\n')?'\n':''; const ins=pre+t+'\n'; setVal(val.slice(0,s)+ins+val.slice(s), s+ins.length); };
+  ({bold:()=>wrap('**','**','bold'), italic:()=>wrap('*','*','italic'), code:()=>wrap('`','`','code'),
+    h:()=>prefix('## '), ul:()=>prefix('- '), ol:()=>prefix('1. '), quote:()=>prefix('> '), hr:()=>block('---')}[kind]||(()=>{}))();
+  const n=state.notes.find(x=>x.id===openNoteId); if(n){ n.body=ta.value; save(); }
+  ta.focus();
 }
 
 const DEFAULT = {
@@ -680,7 +727,7 @@ function renderSearchResults(q){
   if(!q){ res.innerHTML='<div class="gs-hint">Type to search across tasks, notes and journal…</div>'; return; }
   const hit=s=>(s||'').toLowerCase().includes(q);
   const tasks=[]; state.folders.forEach(f=>f.tasks.forEach(t=>{ if(hit(t.text)||(t.tags||[]).some(hit)) tasks.push({f,t}); }));
-  const notes=state.notes.filter(n=>hit(n.title)||hit(n.body)||(n.tags||[]).some(hit));
+  const notes=state.notes.filter(n=>hit(n.title)||hit(n.body));
   const js=state.thoughts.filter(t=>hit(t.text));
   let h='';
   const sec=(title,items)=> items.length?`<div class="gs-sec">${title} <span class="gs-count">${items.length}</span></div>`:'';
@@ -1011,36 +1058,35 @@ function renderNotes(){
   $('#viewIcon').textContent='📝'; $('#viewTitle').textContent='Notes';
   $('#viewSub').textContent=`${state.notes.length} note${state.notes.length!==1?'s':''}`;
   const c=$('#content');
-  const allTags=[...new Set(state.notes.flatMap(n=>n.tags||[]))].sort();
-  if(notesTag && !allTags.includes(notesTag)) notesTag=null;
+  const usedColors=NOTE_COLORS.filter(c=>state.notes.some(n=>n.color===c));
+  if(notesColor && !usedColors.includes(notesColor)) notesColor=null;
   let h='';
-  if(allTags.length){
-    h+='<div class="filter-bar"><span class="fl-label">Tags</span>';
-    h+=`<span class="chip ${!notesTag?'on':''}" data-ntag="">All</span>`;
-    allTags.forEach(tg=>{ h+=`<span class="chip ${notesTag===tg?'on':''}" data-ntag="${esc(tg)}"># ${esc(tg)}</span>`; });
+  if(usedColors.length){
+    h+='<div class="filter-bar"><span class="fl-label">Labels</span>';
+    h+=`<span class="cf-swatch all ${!notesColor?'on':''}" data-cf="" title="All">All</span>`;
+    usedColors.forEach(c=>{ h+=`<span class="cf-swatch ${notesColor===c?'on':''}" data-cf="${c}" style="background:${c}" title="Filter"></span>`; });
     h+='</div>';
   }
   let list=[...state.notes].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
-  if(notesTag) list=list.filter(n=>(n.tags||[]).includes(notesTag));
+  if(notesColor) list=list.filter(n=>n.color===notesColor);
   h+='<div class="notes-grid">';
   h+=`<div class="note-add" id="addNote"><span style="font-size:28px">＋</span>New note</div>`;
   list.forEach(n=>{
     const title=esc(n.title)||'<span class="nc-empty">Untitled</span>';
     const body=esc(n.body)||'<span class="nc-empty">No content yet…</span>';
-    const tags=(n.tags||[]).map(tg=>`<span class="tag">#${esc(tg)}</span>`).join('');
-    h+=`<div class="note-card ${n.pinned?'pinned':''}" data-id="${n.id}">
+    const colStyle=n.color?`style="background:${hexA(n.color,0.16)};border-color:${hexA(n.color,0.4)}"`:'';
+    h+=`<div class="note-card ${n.pinned?'pinned':''}" data-id="${n.id}" ${colStyle}>
       ${n.pinned?'<span class="pin-badge">📌</span>':''}
       <span class="trash">🗑</span>
       <div class="nc-title">${title}</div>
       <div class="note-body-preview">${body}</div>
-      ${tags?`<div class="nc-tags">${tags}</div>`:''}
       <span class="note-date">${new Date(n.ts).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})}</span>
     </div>`;
   });
   h+='</div>';
   c.innerHTML=h;
-  c.querySelectorAll('.chip[data-ntag]').forEach(el=>{ el.onclick=()=>{ notesTag=el.dataset.ntag||null; render(); }; });
-  $('#addNote').onclick=()=>{ const n={id:uid(),title:'',body:'',ts:Date.now()}; state.notes.unshift(n); save(); render(); openNote(n.id); };
+  c.querySelectorAll('.cf-swatch[data-cf]').forEach(el=>{ el.onclick=()=>{ notesColor=el.dataset.cf||null; render(); }; });
+  $('#addNote').onclick=()=>{ const n={id:uid(),title:'',body:'',color:'',ts:Date.now()}; state.notes.unshift(n); save(); render(); openNote(n.id); };
   c.querySelectorAll('.note-card').forEach(el=>{
     const id=el.dataset.id;
     el.onclick=e=>{
@@ -1057,7 +1103,8 @@ function openNote(id){
   openNoteId=id;
   $('#mNoteTitle').value=n.title;
   $('#mNoteBody').value=n.body;
-  $('#mNoteTags').value=(n.tags||[]).join(', ');
+  $('#mColors').innerHTML='<span class="m-swatch none '+(!n.color?'on':'')+'" data-color="" title="No color">∅</span>'+NOTE_COLORS.map(c=>`<span class="m-swatch ${n.color===c?'on':''}" data-color="${c}" style="background:${c}"></span>`).join('');
+  $('#mColors').querySelectorAll('.m-swatch').forEach(el=>{ el.onclick=()=>{ n.color=el.dataset.color; save(); $('#mColors').querySelectorAll('.m-swatch').forEach(s=>s.classList.toggle('on', s.dataset.color===(n.color||''))); }; });
   $('#mPin').classList.toggle('on', !!n.pinned);
   setNoteTab('edit');
   $('#mNoteDate').textContent='Last edited '+new Date(n.ts).toLocaleString();
@@ -1070,6 +1117,7 @@ function setNoteTab(which){
   $('#mPrevTab').classList.toggle('on',!edit);
   $('#mNoteBody').style.display=edit?'block':'none';
   $('#mNotePreview').style.display=edit?'none':'block';
+  $('#mdToolbar').style.display=edit?'flex':'none';
   if(!edit){ const n=state.notes.find(x=>x.id===openNoteId); $('#mNotePreview').innerHTML=mdRender(n?n.body:''); }
 }
 function closeNoteModal(){
@@ -1380,10 +1428,10 @@ $('#fileInput').onchange=e=>{
 /* modal one-time bindings */
 $('#mNoteTitle').oninput=()=>{ const n=state.notes.find(x=>x.id===openNoteId); if(n){ n.title=$('#mNoteTitle').value; n.ts=Date.now(); save(); } };
 $('#mNoteBody').oninput=()=>{ const n=state.notes.find(x=>x.id===openNoteId); if(n){ n.body=$('#mNoteBody').value; n.ts=Date.now(); save(); } };
-$('#mNoteTags').oninput=()=>{ const n=state.notes.find(x=>x.id===openNoteId); if(n){ n.tags=$('#mNoteTags').value.split(',').map(s=>s.trim().replace(/^#/,'')).filter(Boolean); save(); } };
 $('#mPin').onclick=()=>{ const n=state.notes.find(x=>x.id===openNoteId); if(n){ n.pinned=!n.pinned; $('#mPin').classList.toggle('on',!!n.pinned); save(); } };
 $('#mEditTab').onclick=()=>setNoteTab('edit');
 $('#mPrevTab').onclick=()=>setNoteTab('preview');
+document.querySelectorAll('#mdToolbar button').forEach(b=>{ b.onmousedown=e=>e.preventDefault(); b.onclick=()=>mdInsert(b.dataset.md); });
 $('#mClose').onclick=closeNoteModal;
 $('#mDelete').onclick=()=>{ if(openNoteId && confirm('Delete this note?')){ state.notes=state.notes.filter(x=>x.id!==openNoteId); save(); closeNoteModal(); } };
 $('#noteModal').onclick=e=>{ if(e.target.id==='noteModal') closeNoteModal(); };
